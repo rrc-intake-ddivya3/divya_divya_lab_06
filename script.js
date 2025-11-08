@@ -24,10 +24,11 @@ function getCookie(name) {
 	if (parts.length === 2) return parts.pop().split(";").shift();
 }
 
-
-
-
-
+function getCookie(name) {
+    const value = "; " + document.cookie;
+    const parts = value.split("; " + name + "=");
+    if (parts.length === 2) return parts.pop().split(";").shift();
+}
 
 
 
@@ -36,19 +37,16 @@ function getCookie(name) {
  * Uses a short delay to ensure the transition is triggered.
  */
 function showTopBanner() {
-    const dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
-	if (dnt === "1" || dnt === "yes") return; // Respect DNT
-
-	// Don't show if flag already exists in sessionStorage
+    if (isDoNotTrackEnabled()) return; // Respect DNT
 	if (sessionStorage.getItem("topBannerClosed") === "true") return;
 
 	var banner = document.getElementById("top-banner");
 	banner.classList.remove("hide");
 
-	// Short delay to trigger slide-down transition
 	setTimeout(function () {
 		banner.classList.add("show");
 	}, 50);
+    
 }
 
 
@@ -56,6 +54,8 @@ function showTopBanner() {
  * Displays the footer banner by removing the 'hide' class from it.
  */
 function showFooterBanner() {
+    if (isDoNotTrackEnabled()) return; // Respect DNT
+    if (getCookie("footerBannerClosed"))return;
 	document.getElementById("footer-banner").classList.remove("hide");
 }
 
@@ -63,18 +63,18 @@ function showFooterBanner() {
  * Displays the modal by removing the 'hide' class from it.
  */
 function showModal() {
-	const dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
-    if (dnt === "1" || dnt === "yes") return; // Respect Do Not Track setting
+    if (isDoNotTrackEnabled()) return; // Respect DNT
+	if (localStorage.getItem("modalClosed") === "true") return;
 
-    if(localStorage.getItem("modalClosed") === "true") return; // Check if modal was previously closed
-
-    document.getElementById("modal").classList.remove("hide");
+	document.getElementById("modal").classList.remove("hide");
 }
+	
 /**
  * Hides the modal by adding the 'hide' class to it.
  */
 function closeModal() {
 	document.getElementById("modal").classList.add("hide");
+    if (isDoNotTrackEnabled()) return; // Respect DNT
     localStorage.setItem("modalClosed", "true"); // Remember that the modal was closed
 }
 
@@ -83,6 +83,7 @@ function closeModal() {
  */
 function closeTopBanner() {
 	document.getElementById("top-banner").classList.add("hide");
+    if (isDoNotTrackEnabled()) return; // Respect DNT
     sessionStorage.setItem("topBannerClosed", "true"); // Remember that the top banner was closed
 }
 
@@ -91,6 +92,7 @@ function closeTopBanner() {
  */
 function closeFooterBanner() {
 	document.getElementById("footer-banner").classList.add("hide");
+    if (isDoNotTrackEnabled()) return; // Respect DNT
     setCookie("footerBannerClosed", "true", 7); // Remember that the footer banner was closed for 7 days
 }
 
@@ -113,3 +115,8 @@ setTimeout(showTopBanner, 2000);
 
 // Show the modal after a delay of 4 seconds
 setTimeout(showModal, 4000);
+
+// console log if do not track is enabled
+if(isDoNotTrackEnabled()){
+    console.log("Do Not Track is enabled - no tracking or storage actions will be performed.");
+}
