@@ -33,6 +33,7 @@ function showModal() {
  */
 function closeModal() {
 	document.getElementById("modal").classList.add("hide");
+    localStorage.setItem("modalClosed", "true"); // Remember that the modal was closed
 }
 
 /**
@@ -50,11 +51,15 @@ function closeFooterBanner() {
 }
 
 // Event listeners to close the modal, top banner, and footer banner when 'x' is clicked
-document.getElementById("modal").addEventListener("click", closeModal);
-document.getElementById("top-banner").addEventListener("click", closeTopBanner);
-document
-	.getElementById("footer-banner")
-	.addEventListener("click", closeFooterBanner);
+document.querySelectorAll(".close").forEach(function (btn) {
+	btn.addEventListener("click", function (e) {
+		var parent = e.target.parentElement;
+		if (parent.id === "modal" || parent.classList.contains("modal-content"))
+			closeModal();
+		else if (parent.id === "top-banner") closeTopBanner();
+		else if (parent.id === "footer-banner") closeFooterBanner();
+	});
+});
 
 // Show the footer banner after a delay of 1 second
 setTimeout(showFooterBanner, 1000);
