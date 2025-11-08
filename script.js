@@ -116,6 +116,34 @@ setTimeout(showTopBanner, 2000);
 // Show the modal after a delay of 4 seconds
 setTimeout(showModal, 4000);
 
+/**
+ * Clears all data (localStorage, sessionStorage, and cookies)
+ * and reloads the page.
+ */
+function clearAllData() {
+    if (isDoNotTrackEnabled()) {
+        alert("Do Not Track is enabled — data clearing is not tracked!");
+    }
+
+    // Clear storages
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // Clear cookies
+    document.cookie.split(";").forEach(function (c) {
+        document.cookie = c
+            .replace(/^ +/, "")
+            .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+    });
+
+    alert("All data cleared! Reloading page...");
+    location.reload();
+}
+
+// Attach event listener to the button
+document.getElementById("clear-data-btn").addEventListener("click", clearAllData);
+
+
 // console log if do not track is enabled
 if(isDoNotTrackEnabled()){
     console.log("Do Not Track is enabled - no tracking or storage actions will be performed.");
