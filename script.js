@@ -3,14 +3,23 @@
  * Uses a short delay to ensure the transition is triggered.
  */
 function showTopBanner() {
+    const dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+	if (dnt === "1" || dnt === "yes") return; // Respect DNT
+
+	// Don't show if flag already exists in sessionStorage
+	if (sessionStorage.getItem("topBannerClosed") === "true") return;
+
 	var banner = document.getElementById("top-banner");
 	banner.classList.remove("hide");
+
+	// Short delay to trigger slide-down transition
 	setTimeout(function () {
 		banner.classList.add("show");
-	}, 50); // Delay to ensure the transition is triggered
+	}, 50);
 }
 
-/**
+
+ /**
  * Displays the footer banner by removing the 'hide' class from it.
  */
 function showFooterBanner() {
@@ -41,6 +50,7 @@ function closeModal() {
  */
 function closeTopBanner() {
 	document.getElementById("top-banner").classList.add("hide");
+    sessionStorage.setItem("topBannerClosed", "true"); // Remember that the top banner was closed
 }
 
 /**
