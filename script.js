@@ -1,5 +1,12 @@
 // script.js Divya Divya
 
+
+// function for do not track
+function isDoNotTrackEnabled() {
+    const dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+    return dnt === "1" || dnt === "yes";
+}
+
 // function for cookies
 function setCookie(name, value, days) {
     let expires = "";
