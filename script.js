@@ -21,9 +21,13 @@ function showFooterBanner() {
  * Displays the modal by removing the 'hide' class from it.
  */
 function showModal() {
-	document.getElementById("modal").classList.remove("hide");
-}
+	const dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+    if (dnt === "1" || dnt === "yes") return; // Respect Do Not Track setting
 
+    if(localStorage.getItem("modalClosed") === "true") return; // Check if modal was previously closed
+
+    document.getElementById("modal").classList.remove("hide");
+}
 /**
  * Hides the modal by adding the 'hide' class to it.
  */
